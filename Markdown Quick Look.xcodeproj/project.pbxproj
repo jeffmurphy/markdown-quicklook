@@ -8,13 +8,42 @@
 
 /* Begin PBXBuildFile section */
 		1E24651B92518AA3C1F6496B /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225BA407CB9A54940B0C42C2 /* StatusView.swift */; };
+		93C415B01B3104E8ECE97B75 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B25B509363E54A646A1D077 /* PreviewViewController.swift */; };
+		A112D3017A9DF910CF90F86B /* MarkdownQuickLookExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E1F927BAB166A2659B0BD19C /* MarkdownQuickLookExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D7E908AC940B2B4DB825CDB2 /* MarkdownQuickLookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D477E57E6BA27B850FC0747D /* MarkdownQuickLookApp.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BB27293167C8A9FF7C6B09C4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 50BAACD9E2BEE16CBE4C3E11 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 50EEEA3CE97ADE66821B9574;
+			remoteInfo = MarkdownQuickLookExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		23676DC2CF2C004B4B0FEA63 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A112D3017A9DF910CF90F86B /* MarkdownQuickLookExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		225BA407CB9A54940B0C42C2 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		52D6FE7E6BC3781A3A619FA0 /* Markdown Quick Look.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Markdown Quick Look.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8FAFF0F2E3DC8FD8F4C3D815 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9B25B509363E54A646A1D077 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		D477E57E6BA27B850FC0747D /* MarkdownQuickLookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownQuickLookApp.swift; sourceTree = "<group>"; };
+		E1F927BAB166A2659B0BD19C /* MarkdownQuickLookExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MarkdownQuickLookExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -22,6 +51,7 @@
 			isa = PBXGroup;
 			children = (
 				4D60CD272CCFA2ACF0BF1E1B /* MarkdownQuickLook */,
+				B02FD1ED8CB6755ACFEC729F /* MarkdownQuickLookExtension */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -35,10 +65,20 @@
 			path = MarkdownQuickLook;
 			sourceTree = "<group>";
 		};
+		B02FD1ED8CB6755ACFEC729F /* MarkdownQuickLookExtension */ = {
+			isa = PBXGroup;
+			children = (
+				8FAFF0F2E3DC8FD8F4C3D815 /* Info.plist */,
+				9B25B509363E54A646A1D077 /* PreviewViewController.swift */,
+			);
+			path = MarkdownQuickLookExtension;
+			sourceTree = "<group>";
+		};
 		B328EC0969926B3DA391803B /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				52D6FE7E6BC3781A3A619FA0 /* Markdown Quick Look.app */,
+				E1F927BAB166A2659B0BD19C /* MarkdownQuickLookExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -59,10 +99,12 @@
 			buildConfigurationList = E3D52E4F7557CD123F6F0F50 /* Build configuration list for PBXNativeTarget "Markdown Quick Look" */;
 			buildPhases = (
 				9596A922B6162F8F02080223 /* Sources */,
+				23676DC2CF2C004B4B0FEA63 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E44E040D37A2D4CA6D36CF3B /* PBXTargetDependency */,
 			);
 			name = "Markdown Quick Look";
 			packageProductDependencies = (
@@ -70,6 +112,23 @@
 			productName = "Markdown Quick Look";
 			productReference = 52D6FE7E6BC3781A3A619FA0 /* Markdown Quick Look.app */;
 			productType = "com.apple.product-type.application";
+		};
+		50EEEA3CE97ADE66821B9574 /* MarkdownQuickLookExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 934C77319A8C8A7054A9E3DE /* Build configuration list for PBXNativeTarget "MarkdownQuickLookExtension" */;
+			buildPhases = (
+				980B04E75ABB96086649484C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MarkdownQuickLookExtension;
+			packageProductDependencies = (
+			);
+			productName = MarkdownQuickLookExtension;
+			productReference = E1F927BAB166A2659B0BD19C /* MarkdownQuickLookExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +140,9 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					09151971AF58B16BDA3BFF50 = {
+						ProvisioningStyle = Automatic;
+					};
+					50EEEA3CE97ADE66821B9574 = {
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -100,6 +162,7 @@
 			projectRoot = "";
 			targets = (
 				09151971AF58B16BDA3BFF50 /* Markdown Quick Look */,
+				50EEEA3CE97ADE66821B9574 /* MarkdownQuickLookExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -114,9 +177,48 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		980B04E75ABB96086649484C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93C415B01B3104E8ECE97B75 /* PreviewViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		E44E040D37A2D4CA6D36CF3B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 50EEEA3CE97ADE66821B9574 /* MarkdownQuickLookExtension */;
+			targetProxy = BB27293167C8A9FF7C6B09C4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		09D913F74B1E3EB987919C88 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Sources/MarkdownQuickLookExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jmurphy.markdownquicklook.PreviewExtension;
+				PRODUCT_NAME = MarkdownQuickLookExtension;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
 		468EF3A0F96D8EB9738D6CA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -141,6 +243,29 @@
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
+		};
+		7031E3050C702B0B08F5EDF0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Sources/MarkdownQuickLookExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jmurphy.markdownquicklook.PreviewExtension;
+				PRODUCT_NAME = MarkdownQuickLookExtension;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
 		};
 		721A523A65483939152E86B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -294,6 +419,15 @@
 			buildConfigurations = (
 				721A523A65483939152E86B7 /* Debug */,
 				F08D1E4728C92D70FB255173 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		934C77319A8C8A7054A9E3DE /* Build configuration list for PBXNativeTarget "MarkdownQuickLookExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09D913F74B1E3EB987919C88 /* Debug */,
+				7031E3050C702B0B08F5EDF0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

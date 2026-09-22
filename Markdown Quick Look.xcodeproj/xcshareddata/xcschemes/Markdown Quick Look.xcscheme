@@ -21,6 +21,20 @@
                ReferencedContainer = "container:Markdown Quick Look.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "50EEEA3CE97ADE66821B9574"
+               BuildableName = "MarkdownQuickLookExtension.appex"
+               BlueprintName = "MarkdownQuickLookExtension"
+               ReferencedContainer = "container:Markdown Quick Look.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

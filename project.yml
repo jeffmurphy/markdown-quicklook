@@ -20,6 +20,9 @@ targets:
     deploymentTarget: "13.0"
     sources:
       - path: Sources/MarkdownQuickLook
+    dependencies:
+      - target: MarkdownQuickLookExtension
+        embed: true
     settings:
       base:
         PRODUCT_NAME: "Markdown Quick Look"
@@ -35,11 +38,31 @@ targets:
         INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.productivity"
         MACOSX_DEPLOYMENT_TARGET: "13.0"
 
+  MarkdownQuickLookExtension:
+    type: app-extension
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: Sources/MarkdownQuickLookExtension
+    settings:
+      base:
+        PRODUCT_NAME: "MarkdownQuickLookExtension"
+        PRODUCT_BUNDLE_IDENTIFIER: com.jmurphy.markdownquicklook.PreviewExtension
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: YES
+        INFOPLIST_FILE: Sources/MarkdownQuickLookExtension/Info.plist
+        MACOSX_DEPLOYMENT_TARGET: "13.0"
+        SKIP_INSTALL: YES
+
 schemes:
   Markdown Quick Look:
     build:
       targets:
         Markdown Quick Look: all
+        MarkdownQuickLookExtension: all
     run:
       config: Debug
     archive:
