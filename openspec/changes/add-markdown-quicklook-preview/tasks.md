@@ -25,7 +25,7 @@
 
 ## 4. Quick Look Extension Controller
 
-- [ ] 4.1 Implement `QLPreviewingController.providePreview(for:completionHandler:)`: read file (capped at 5 MB, appending a truncation notice beyond the cap), strip front matter, assemble HTML, and verify with a fixture file larger than 5 MB that the preview shows a truncation notice
+- [ ] 4.1 Implement `QLPreviewingController.preparePreviewOfFile(at:completionHandler:)`: read file (capped at 5 MB, appending a truncation notice beyond the cap), strip front matter, assemble HTML, and verify with a fixture file larger than 5 MB that the preview shows a truncation notice
 - [ ] 4.2 Load the assembled HTML into the extension's `WKWebView` via `loadFileURL(_:allowingReadAccessTo:)` scoped to the previewed file's containing directory, and verify a fixture with a relative image (`./images/pic.png`) displays the image via `qlmanage -p`
 - [ ] 4.3 Verify graceful handling of a missing relative image (broken-image placeholder, no crash) using a fixture referencing a non-existent image path
 - [ ] 4.4 Implement an internal render/load timeout that calls the completion handler with a fallback/error state if exceeded, and verify via a deliberately slow/large fixture that the extension does not hang past the timeout
