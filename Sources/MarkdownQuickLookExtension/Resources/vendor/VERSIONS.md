@@ -16,7 +16,7 @@ the vendored files themselves.
 | highlight.js theme (light) | 11.11.2 | BSD-3-Clause | `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.2/styles/github.min.css` | `highlight/styles/github.min.css` |
 | highlight.js theme (dark) | 11.11.2 | BSD-3-Clause | `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.2/styles/github-dark.min.css` | `highlight/styles/github-dark.min.css` |
 | [mermaid](https://github.com/mermaid-js/mermaid) | 12.0.0 | MIT | `https://cdn.jsdelivr.net/npm/mermaid@12.0.0/dist/mermaid.min.js` | `mermaid/mermaid.min.js` |
-| [katex](https://github.com/KaTeX/KaTeX) | 0.18.7 | MIT | `https://github.com/KaTeX/KaTeX/releases/download/v0.18.7/katex.tar.gz` (extracted) | `katex/katex.min.js`, `katex/katex.min.css`, `katex/fonts/*` |
+| [katex](https://github.com/KaTeX/KaTeX) | 0.18.7 | MIT | `https://github.com/KaTeX/KaTeX/releases/download/v0.18.7/katex.tar.gz` (extracted) | `katex/katex.min.js`, `katex/katex.min.css`, `katex/fonts/*`, `katex/contrib/auto-render.min.js` |
 
 ## Notes
 

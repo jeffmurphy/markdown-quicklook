@@ -62,6 +62,8 @@ fetch "$KATEX_TARBALL_URL" "$KATEX_TMP_DIR/katex.tar.gz"
 tar -xzf "$KATEX_TMP_DIR/katex.tar.gz" -C "$KATEX_TMP_DIR"
 cp "$KATEX_TMP_DIR/katex/katex.min.js" "$VENDOR_DIR/katex/katex.min.js"
 cp "$KATEX_TMP_DIR/katex/katex.min.css" "$VENDOR_DIR/katex/katex.min.css"
+mkdir -p "$VENDOR_DIR/katex/contrib"
+cp "$KATEX_TMP_DIR/katex/contrib/auto-render.min.js" "$VENDOR_DIR/katex/contrib/auto-render.min.js"
 rm -rf "$VENDOR_DIR/katex/fonts"
 cp -R "$KATEX_TMP_DIR/katex/fonts" "$VENDOR_DIR/katex/fonts"
 
