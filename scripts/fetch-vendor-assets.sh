@@ -24,11 +24,13 @@ VENDOR_DIR="$REPO_ROOT/Sources/MarkdownQuickLookExtension/Resources/vendor"
 
 # Pinned versions - update deliberately, not automatically.
 MARKED_VERSION="18.0.14"
+MARKED_FOOTNOTE_VERSION="1.4.0"
 HIGHLIGHTJS_VERSION="11.11.2"
 MERMAID_VERSION="12.0.0"
 KATEX_VERSION="0.18.7"
 
 MARKED_URL="https://cdn.jsdelivr.net/npm/marked@${MARKED_VERSION}/lib/marked.umd.js"
+MARKED_FOOTNOTE_URL="https://cdn.jsdelivr.net/npm/marked-footnote@${MARKED_FOOTNOTE_VERSION}/dist/index.umd.js"
 HIGHLIGHTJS_JS_URL="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/${HIGHLIGHTJS_VERSION}/highlight.min.js"
 HIGHLIGHTJS_LIGHT_CSS_URL="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/${HIGHLIGHTJS_VERSION}/styles/github.min.css"
 HIGHLIGHTJS_DARK_CSS_URL="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/${HIGHLIGHTJS_VERSION}/styles/github-dark.min.css"
@@ -46,6 +48,9 @@ fetch() {
 
 echo "--> marked.js ${MARKED_VERSION}"
 fetch "$MARKED_URL" "$VENDOR_DIR/marked/marked.umd.js"
+
+echo "--> marked-footnote ${MARKED_FOOTNOTE_VERSION} (GFM footnote extension - marked.js core has no footnote support)"
+fetch "$MARKED_FOOTNOTE_URL" "$VENDOR_DIR/marked/marked-footnote.umd.js"
 
 echo "--> highlight.js ${HIGHLIGHTJS_VERSION} (common-language bundle + github light/dark themes)"
 fetch "$HIGHLIGHTJS_JS_URL" "$VENDOR_DIR/highlight/highlight.min.js"
@@ -69,7 +74,8 @@ cp -R "$KATEX_TMP_DIR/katex/fonts" "$VENDOR_DIR/katex/fonts"
 
 echo ""
 echo "==> Done. Fetched versions:"
-echo "    marked.js:     ${MARKED_VERSION}"
+echo "    marked.js:       ${MARKED_VERSION}"
+echo "    marked-footnote: ${MARKED_FOOTNOTE_VERSION}"
 echo "    highlight.js:  ${HIGHLIGHTJS_VERSION}"
 echo "    mermaid:       ${MERMAID_VERSION}"
 echo "    katex:         ${KATEX_VERSION}"

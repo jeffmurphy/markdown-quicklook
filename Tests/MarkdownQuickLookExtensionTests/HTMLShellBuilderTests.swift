@@ -118,6 +118,41 @@ final class HTMLShellBuilderTests: XCTestCase {
         let html = HTMLShellBuilder.build(bodyHTML: "<p>body</p>", rawMarkdownSource: "text")
         XCTAssertTrue(html.contains(#"<link rel="stylesheet" href="theme.css">"#))
     }
+
+    func test_bootstrapScriptTagIsAlwaysPresentAfterBody() {
+        let html = HTMLShellBuilder.build(bodyHTML: "<p>body</p>", rawMarkdownSource: "text")
+        XCTAssertTrue(html.contains(#"<script src="bootstrap.js"></script>"#))
+    }
+
+    func test_mathBlock_alsoIncludesKaTeXAutoRenderScriptTag() {
+        let html = HTMLShellBuilder.build(bodyHTML: "<p>body</p>", rawMarkdownSource: "$$E=mc^2$$")
+        XCTAssertTrue(html.contains(#"<script src="vendor/katex/contrib/auto-render.min.js"></script>"#))
+    }
+
+    func test_alwaysIncludesMarkedFootnoteScriptTag() {
+        // marked.js core has no footnote support - see
+        // specs/markdown-rendering-pipeline/spec.md Footnotes requirement.
+        let html = HTMLShellBuilder.build(bodyHTML: "<p>body</p>", rawMarkdownSource: "text")
+        XCTAssertTrue(html.contains(#"<script src="vendor/marked/marked-footnote.umd.js"></script>"#))
+    }
+
+    func test_lightTheme_includesGithubLightHighlightStylesheet() {
+        let html = HTMLShellBuilder.build(
+            bodyHTML: "<p>body</p>",
+            options: HTMLShellBuilder.Options(theme: .light)
+        )
+        XCTAssertTrue(html.contains(#"<link rel="stylesheet" href="vendor/highlight/styles/github.min.css">"#))
+        XCTAssertFalse(html.contains("github-dark.min.css"))
+    }
+
+    func test_darkTheme_includesGithubDarkHighlightStylesheet() {
+        let html = HTMLShellBuilder.build(
+            bodyHTML: "<p>body</p>",
+            options: HTMLShellBuilder.Options(theme: .dark)
+        )
+        XCTAssertTrue(html.contains(#"<link rel="stylesheet" href="vendor/highlight/styles/github-dark.min.css">"#))
+        XCTAssertFalse(html.contains(#"href="vendor/highlight/styles/github.min.css">"#))
+    }
 }
 
 final class RenderingFeatureDetectorTests: XCTestCase {

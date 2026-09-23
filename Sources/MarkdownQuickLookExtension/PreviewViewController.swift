@@ -2,16 +2,18 @@
 //  PreviewViewController.swift
 //  MarkdownQuickLookExtension
 //
-//  View-based Quick Look preview controller. Hosts a WKWebView and renders
-//  the previewed Markdown file as themed HTML using bundled, offline JS
-//  (marked.js, highlight.js, Mermaid, KaTeX). See
+//  View-based Quick Look preview controller. Hosts a WKWebView and
+//  renders the previewed Markdown file as themed HTML using bundled,
+//  offline JS (marked.js, highlight.js, Mermaid, KaTeX). See
 //  openspec/changes/add-markdown-quicklook-preview/design.md - Decision 2.
 //
-//  Currently a stub for task markdown-quicklook-yyp.1.2: hosts a WKWebView
-//  and completes the preview successfully once navigation finishes, but
-//  does not yet run the real Markdown-to-HTML rendering pipeline. Full
-//  implementation lands in tasks 3.x (rendering pipeline) and 4.1
-//  (preparePreviewOfFile wiring, 5MB cap, front matter, timeout).
+//  Loads via loadHTMLString with baseURL = this extension's own bundle
+//  Resources directory, so our own assets (theme.css, bootstrap.js,
+//  vendor/*) resolve correctly via plain relative paths. This does NOT
+//  yet resolve relative image/link paths from the previewed document's
+//  OWN directory (e.g. "./images/pic.png") - that requires
+//  loadFileURL(_:allowingReadAccessTo:) with a sandbox read-access grant
+//  for the document's directory, which is task 4.2.
 //
 
 import Cocoa
@@ -19,6 +21,11 @@ import Quartz
 import WebKit
 
 class PreviewViewController: NSViewController, QLPreviewingController, WKNavigationDelegate {
+
+    /// See design.md Decision 6: Markdown documents are overwhelmingly
+    /// small text files; 5MB is generous headroom while still bounding
+    /// worst-case read/parse/render time.
+    private static let maxPreviewBytes = 5 * 1024 * 1024
 
     private var webView: WKWebView!
     private var completionHandler: ((Error?) -> Void)?
@@ -34,16 +41,21 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
         completionHandler = handler
-        let placeholder = """
-        <html>
-        <body style="font-family: -apple-system, sans-serif; padding: 2em; color: #1d1d1f; background-color: #ffffff;">
-        <h1>Markdown Quick Look</h1>
-        <p>Extension installed for: \(url.lastPathComponent)</p>
-        <p style="color: #888;">Rendering pipeline not yet implemented (see tasks 3.x/4.1).</p>
-        </body>
-        </html>
-        """
-        webView.loadHTMLString(placeholder, baseURL: nil)
+
+        let loaded = FileContentLoader.load(url: url, maxBytes: Self.maxPreviewBytes)
+        let parsed = FrontMatterParser.parse(loaded.text)
+
+        var markdownBody = parsed.body
+        if loaded.wasTruncated {
+            markdownBody = PreviewDocumentAssembler.appendTruncationNotice(to: markdownBody)
+        }
+
+        let bodyHTML = PreviewDocumentAssembler.assembleBodyHTML(markdownSource: markdownBody, metadata: parsed.metadata)
+        let theme = SystemAppearanceDetector.currentTheme()
+        let html = HTMLShellBuilder.build(bodyHTML: bodyHTML, rawMarkdownSource: markdownBody, theme: theme)
+
+        let resourceBaseURL = Bundle(for: Self.self).resourceURL
+        webView.loadHTMLString(html, baseURL: resourceBaseURL)
     }
 
     // Only tell Quick Look the preview is ready once the web view has

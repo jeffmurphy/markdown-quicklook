@@ -49,11 +49,17 @@ enum HTMLShellBuilder {
     ///   - options: Which optional libraries to inject `<script>`/`<link>`
     ///     tags for.
     static func build(bodyHTML: String, options: Options) -> String {
+        let highlightThemeCSS = options.theme == .dark
+            ? #"<link rel="stylesheet" href="vendor/highlight/styles/github-dark.min.css">"#
+            : #"<link rel="stylesheet" href="vendor/highlight/styles/github.min.css">"#
+
         var headTags: [String] = [
             #"<meta charset="utf-8">"#,
             contentSecurityPolicyTag,
             #"<link rel="stylesheet" href="theme.css">"#,
+            highlightThemeCSS,
             #"<script src="vendor/marked/marked.umd.js"></script>"#,
+            #"<script src="vendor/marked/marked-footnote.umd.js"></script>"#,
             #"<script src="vendor/highlight/highlight.min.js"></script>"#,
         ]
 
@@ -63,6 +69,7 @@ enum HTMLShellBuilder {
         if options.includeKaTeX {
             headTags.append(#"<link rel="stylesheet" href="vendor/katex/katex.min.css">"#)
             headTags.append(#"<script src="vendor/katex/katex.min.js"></script>"#)
+            headTags.append(#"<script src="vendor/katex/contrib/auto-render.min.js"></script>"#)
         }
 
         let head = headTags.joined(separator: "\n    ")
@@ -75,6 +82,7 @@ enum HTMLShellBuilder {
         </head>
         <body>
         \(bodyHTML)
+        <script src="bootstrap.js"></script>
         </body>
         </html>
         """

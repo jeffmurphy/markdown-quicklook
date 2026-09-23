@@ -12,6 +12,7 @@ the vendored files themselves.
 | Library | Version | License | Source | Vendored as |
 |---|---|---|---|---|
 | [marked](https://github.com/markedjs/marked) | 18.0.14 | MIT | `https://cdn.jsdelivr.net/npm/marked@18.0.14/lib/marked.umd.js` | `marked/marked.umd.js` |
+| [marked-footnote](https://github.com/bent10/marked-extensions) | 1.4.0 | MIT | `https://cdn.jsdelivr.net/npm/marked-footnote@1.4.0/dist/index.umd.js` | `marked/marked-footnote.umd.js` |
 | [highlight.js](https://github.com/highlightjs/highlight.js) | 11.11.2 | BSD-3-Clause | `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.2/highlight.min.js` | `highlight/highlight.min.js` |
 | highlight.js theme (light) | 11.11.2 | BSD-3-Clause | `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.2/styles/github.min.css` | `highlight/styles/github.min.css` |
 | highlight.js theme (dark) | 11.11.2 | BSD-3-Clause | `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.2/styles/github-dark.min.css` | `highlight/styles/github-dark.min.css` |
@@ -22,6 +23,12 @@ the vendored files themselves.
 
 - **marked**: current releases (v13+) no longer publish a root `marked.min.js`;
   the browser-ready build is `lib/marked.umd.js` (unminified but small, ~46KB).
+- **marked-footnote**: marked.js core implements CommonMark + a GFM extension
+  (tables, task lists, strikethrough) but does NOT support GFM footnotes
+  out of the box - this extension (`marked.use(markedFootnote())`) adds
+  that support, matching specs/markdown-rendering-pipeline/spec.md's
+  Footnotes requirement. Discovered missing during real end-to-end
+  testing in task 4.1.
 - **highlight.js**: the cdnjs-hosted `highlight.min.js` bundle includes the
   "common" language subset (~128KB) - confirmed to include python, rust,
   swift, typescript, etc. - not the full 192-language grammar set, keeping
