@@ -93,6 +93,31 @@ final class HTMLShellBuilderTests: XCTestCase {
         let html = HTMLShellBuilder.build(bodyHTML: "<p>unique-marker-123</p>", rawMarkdownSource: "text")
         XCTAssertTrue(html.contains("<p>unique-marker-123</p>"))
     }
+
+    // MARK: - Theme (data-theme attribute)
+
+    func test_defaultTheme_isLight() {
+        let html = HTMLShellBuilder.build(bodyHTML: "<p>body</p>", rawMarkdownSource: "text")
+        XCTAssertTrue(html.contains(#"<html data-theme="light">"#))
+    }
+
+    func test_explicitDarkTheme_setsDataThemeAttribute() {
+        let html = HTMLShellBuilder.build(
+            bodyHTML: "<p>body</p>",
+            options: HTMLShellBuilder.Options(theme: .dark)
+        )
+        XCTAssertTrue(html.contains(#"<html data-theme="dark">"#))
+    }
+
+    func test_rawMarkdownSourceConvenienceOverload_passesThemeThrough() {
+        let html = HTMLShellBuilder.build(bodyHTML: "<p>body</p>", rawMarkdownSource: "text", theme: .dark)
+        XCTAssertTrue(html.contains(#"<html data-theme="dark">"#))
+    }
+
+    func test_themeCSSLinkTagIsPresent() {
+        let html = HTMLShellBuilder.build(bodyHTML: "<p>body</p>", rawMarkdownSource: "text")
+        XCTAssertTrue(html.contains(#"<link rel="stylesheet" href="theme.css">"#))
+    }
 }
 
 final class RenderingFeatureDetectorTests: XCTestCase {

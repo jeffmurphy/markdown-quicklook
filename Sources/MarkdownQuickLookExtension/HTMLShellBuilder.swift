@@ -20,13 +20,25 @@ import Foundation
 
 enum HTMLShellBuilder {
 
+    /// Which light/dark palette the theme CSS should apply, keyed off a
+    /// `data-theme` attribute on `<html>` rather than relying solely on
+    /// the web view's own `prefers-color-scheme` media query propagation
+    /// (see design.md Decision 5 - deterministic regardless of whether
+    /// the hosting environment reliably forwards the system appearance).
+    enum Theme: String {
+        case light
+        case dark
+    }
+
     struct Options {
         var includeMermaid: Bool
         var includeKaTeX: Bool
+        var theme: Theme
 
-        init(includeMermaid: Bool = false, includeKaTeX: Bool = false) {
+        init(includeMermaid: Bool = false, includeKaTeX: Bool = false, theme: Theme = .light) {
             self.includeMermaid = includeMermaid
             self.includeKaTeX = includeKaTeX
+            self.theme = theme
         }
     }
 
@@ -57,7 +69,7 @@ enum HTMLShellBuilder {
 
         return """
         <!DOCTYPE html>
-        <html>
+        <html data-theme="\(options.theme.rawValue)">
         <head>
             \(head)
         </head>
@@ -70,10 +82,11 @@ enum HTMLShellBuilder {
 
     /// Convenience overload that runs the cheap substring detection on the
     /// raw Markdown source and builds accordingly.
-    static func build(bodyHTML: String, rawMarkdownSource: String) -> String {
+    static func build(bodyHTML: String, rawMarkdownSource: String, theme: Theme = .light) -> String {
         let options = Options(
             includeMermaid: RenderingFeatureDetector.containsMermaidBlock(rawMarkdownSource),
-            includeKaTeX: RenderingFeatureDetector.containsMathDelimiter(rawMarkdownSource)
+            includeKaTeX: RenderingFeatureDetector.containsMathDelimiter(rawMarkdownSource),
+            theme: theme
         )
         return build(bodyHTML: bodyHTML, options: options)
     }
