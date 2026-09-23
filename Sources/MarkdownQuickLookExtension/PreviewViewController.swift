@@ -15,12 +15,26 @@
 //  loadFileURL(_:allowingReadAccessTo:) with a sandbox read-access grant
 //  for the document's directory, which is task 4.2.
 //
+//  Completion is signaled by bootstrap.js via a WKScriptMessageHandler
+//  ("renderComplete"), NOT by WKNavigationDelegate.didFinish. didFinish
+//  only reflects the static HTML/resource load finishing - our actual
+//  rendering (marked.parse, Mermaid, KaTeX) happens afterward via
+//  bootstrap.js, and Mermaid's rendering is genuinely asynchronous
+//  (returns a Promise). Calling the completion handler on didFinish let
+//  Quick Look tear down the web view while a mermaid.render() Promise
+//  was still in flight, which crashed the whole extension (visible as
+//  "Extension ... failed during preview") instead of falling back
+//  gracefully - found via real end-to-end testing with a Mermaid
+//  fixture, reproduced identically in a plain Safari harness with
+//  byte-identical HTML/JS, confirming it was a completion-timing bug,
+//  not a Mermaid-rendering-logic bug.
+//
 
 import Cocoa
 import Quartz
 import WebKit
 
-class PreviewViewController: NSViewController, QLPreviewingController, WKNavigationDelegate {
+class PreviewViewController: NSViewController, QLPreviewingController, WKNavigationDelegate, WKScriptMessageHandler {
 
     /// See design.md Decision 6. Originally set to 5MB on the (wrong)
     /// assumption that this would be "generous headroom" - empirical
@@ -32,16 +46,26 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
     /// Markdown files (READMEs, notes).
     private static let maxPreviewBytes = 100 * 1024
 
+    private static let renderCompleteMessageName = "renderComplete"
+
     private var webView: WKWebView!
     private var completionHandler: ((Error?) -> Void)?
 
     override func loadView() {
         let configuration = WKWebViewConfiguration()
+        configuration.userContentController.add(self, name: Self.renderCompleteMessageName)
         let view = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600), configuration: configuration)
         view.autoresizingMask = [.width, .height]
         view.navigationDelegate = self
         self.webView = view
         self.view = view
+    }
+
+    deinit {
+        // WKUserContentController.add(_:name:) holds a strong reference
+        // to its handler (self) - remove it to break the retain cycle
+        // (self -> webView -> configuration -> userContentController -> self).
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: Self.renderCompleteMessageName)
     }
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
@@ -63,17 +87,26 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
         webView.loadHTMLString(html, baseURL: resourceBaseURL)
     }
 
-    // Only tell Quick Look the preview is ready once the web view has
-    // actually finished painting the HTML - calling the completion handler
-    // before navigation finishes can result in a blank/black preview
-    // panel, since Quick Look may snapshot the view immediately.
+    // Deliberately does NOT call the completion handler here - see the
+    // type-level doc comment above. didFinish only means the static
+    // HTML/resources loaded; our actual rendering (including Mermaid's
+    // async work) happens afterward via bootstrap.js, which signals true
+    // completion through userContentController(_:didReceive:) instead.
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        completionHandler?(nil)
-        completionHandler = nil
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         completionHandler?(error)
+        completionHandler = nil
+    }
+
+    // MARK: - WKScriptMessageHandler
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.name == Self.renderCompleteMessageName else {
+            return
+        }
+        completionHandler?(nil)
         completionHandler = nil
     }
 }

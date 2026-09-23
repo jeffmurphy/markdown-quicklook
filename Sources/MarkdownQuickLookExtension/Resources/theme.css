@@ -211,6 +211,21 @@ table.frontmatter-metadata tr:last-child td {
   border-bottom: none;
 }
 
+/* Mermaid diagrams (bootstrap.js) */
+.mermaid-diagram {
+  margin-bottom: 16px;
+}
+
+.mermaid-diagram.mermaid-error {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  color: #cf222e;
+  background-color: var(--color-code-bg);
+  padding: 12px 16px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+}
+
 /* Footnotes (marked.js GFM extension) */
 .footnotes {
   font-size: 0.875em;

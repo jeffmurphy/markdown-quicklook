@@ -71,40 +71,70 @@
     }
   }
 
+  // Returns a Promise that resolves once every ```mermaid block has
+  // either rendered or fallen back to an error display. mermaid.render()
+  // is asynchronous (returns a Promise) - the caller MUST await this
+  // before signaling completion back to Swift (see notifyRenderComplete),
+  // or Quick Look may tear down the WKWebView while a render is still
+  // in flight, which manifested as the whole extension crashing rather
+  // than a graceful per-diagram error.
   function renderMermaidDiagrams(container) {
     if (typeof mermaid === "undefined") {
-      return;
+      return Promise.resolve();
     }
     var blocks = container.querySelectorAll("code.language-mermaid");
     if (blocks.length === 0) {
-      return;
+      return Promise.resolve();
     }
     try {
-      mermaid.initialize({ startOnLoad: false });
+      // Mermaid's default theme renders connector lines/arrows in black,
+      // which is invisible against our dark palette - use Mermaid's own
+      // built-in "dark" theme when our data-theme attribute says dark,
+      // matching whatever light/dark palette HTMLShellBuilder picked.
+      var isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      // suppressErrorRendering: mermaid.js by default ALSO injects its
+      // own error graphic elsewhere in the page on render failure, in
+      // addition to rejecting the render() promise - we handle errors
+      // ourselves below, so suppress its built-in error UI to avoid a
+      // confusing duplicate error display.
+      mermaid.initialize({
+        startOnLoad: false,
+        suppressErrorRendering: true,
+        theme: isDark ? "dark" : "default",
+      });
     } catch (e) {
-      return;
+      return Promise.resolve();
     }
-    for (var i = 0; i < blocks.length; i++) {
-      var block = blocks[i];
-      var source = block.textContent;
-      var host = document.createElement("div");
+
+    var diagramPromises = [];
+    for (let i = 0; i < blocks.length; i++) {
+      // `let` (not `var`) is required here: each iteration's block/
+      // source/host must be captured independently by its own
+      // then()/catch() closures below, which run asynchronously after
+      // the loop has already finished. With `var`, all callbacks would
+      // share the same last-iteration values, causing one diagram's
+      // rendered SVG (or error) to be written into a different
+      // diagram's placeholder.
+      const block = blocks[i];
+      const source = block.textContent;
+      const host = document.createElement("div");
       host.className = "mermaid-diagram";
       block.parentNode.replaceWith(host);
-      try {
-        mermaid
-          .render("mermaid-svg-" + i, source)
-          .then(function (result) {
-            host.innerHTML = result.svg;
-          })
-          .catch(function (err) {
-            host.textContent = "Mermaid diagram error: " + err;
-            host.classList.add("mermaid-error");
-          });
-      } catch (e) {
-        host.textContent = "Mermaid diagram error: " + e;
-        host.classList.add("mermaid-error");
-      }
+
+      const diagramPromise = Promise.resolve()
+        .then(function () {
+          return mermaid.render("mermaid-svg-" + i, source);
+        })
+        .then(function (result) {
+          host.innerHTML = result.svg;
+        })
+        .catch(function (err) {
+          host.textContent = "Mermaid diagram error: " + err;
+          host.classList.add("mermaid-error");
+        });
+      diagramPromises.push(diagramPromise);
     }
+    return Promise.all(diagramPromises);
   }
 
   function renderMath(container) {
@@ -126,10 +156,32 @@
     }
   }
 
+  // Tells Swift (PreviewViewController) that rendering is genuinely
+  // finished - including any async work (Mermaid) - via a
+  // WKScriptMessageHandler, rather than relying on WKNavigationDelegate.
+  // didFinish, which only reflects the STATIC HTML/resource load and
+  // fires well before our own client-side rendering (marked.parse,
+  // Mermaid, KaTeX) has actually completed. Signaling completion too
+  // early let Quick Look tear down the web view while a mermaid.render()
+  // Promise was still in flight, which crashed the whole extension
+  // rather than falling back gracefully.
+  function notifyRenderComplete() {
+    try {
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.renderComplete) {
+        window.webkit.messageHandlers.renderComplete.postMessage("done");
+      }
+    } catch (e) {
+      // If the message handler isn't available for some reason, there's
+      // nothing more we can do from here - Swift-side fallback handling
+      // (if any) takes over.
+    }
+  }
+
   function run() {
     var sourceHolder = document.getElementById("markdown-source");
     var container = document.getElementById("markdown-body");
     if (!sourceHolder || !container) {
+      notifyRenderComplete();
       return;
     }
 
@@ -146,8 +198,21 @@
     }
 
     highlightCodeBlocks(container);
-    renderMermaidDiagrams(container);
     renderMath(container);
+
+    // Mermaid is the only genuinely asynchronous piece - wait for it
+    // (successful or not, per-diagram errors are already handled inside
+    // renderMermaidDiagrams) before telling Swift we're done.
+    renderMermaidDiagrams(container)
+      .catch(function () {
+        // Promise.all rejects if any individual promise rejects, but
+        // each one already has its own .catch() attached, so this
+        // should be unreachable - kept as a final safety net so a
+        // rendering completion signal is ALWAYS sent regardless.
+      })
+      .then(function () {
+        notifyRenderComplete();
+      });
   }
 
   if (document.readyState === "complete" || document.readyState === "interactive") {
