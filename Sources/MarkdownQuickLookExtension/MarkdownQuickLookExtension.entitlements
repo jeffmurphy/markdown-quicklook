@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<!-- Required for WKWebView's helper processes (WebContent/GPU/Networking)
+	     to bootstrap their own sandbox extensions - WITHOUT this, those
+	     processes crash immediately on launch ("Application does not have
+	     permission to communicate with network resources", errno=34), even
+	     when rendering purely local/offline HTML with no remote references.
+	     This is a WebKit platform requirement, not a request for our own
+	     code to make network calls. Actual zero-network-request behavior
+	     is enforced at the content level via a strict CSP in the rendered
+	     HTML (see rendering pipeline), not by omitting this entitlement. -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+</dict>
+</plist>

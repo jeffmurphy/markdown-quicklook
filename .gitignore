@@ -45,3 +45,6 @@ xcuserdata/
 *.db
 .beads-credential-key
 .beads/proxieddb/
+
+# OpenCode session artifacts
+oc-session.json

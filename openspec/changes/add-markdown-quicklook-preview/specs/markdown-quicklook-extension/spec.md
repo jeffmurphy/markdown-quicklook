@@ -38,11 +38,15 @@ The extension SHALL present a stable, styled result for any input file rather th
 - **THEN** the extension SHALL render a truncated preview and SHALL indicate to the user that the content was truncated, rather than hanging or failing
 
 ### Requirement: Sandboxed, least-privilege execution
-The extension SHALL run inside the App Sandbox with only the entitlements required to read the previewed file and its containing directory.
+The extension SHALL run inside the App Sandbox with only the entitlements required for it to function: read access to the previewed file and its containing directory, and the `com.apple.security.network.client` entitlement required for its WKWebView's helper processes (WebContent/GPU/Networking) to bootstrap their own sandbox extensions - without it, those helper processes crash immediately on launch, even when rendering purely local content with no remote references. This entitlement permits the OS-level process bootstrap only; it does not by itself cause the extension to make network requests. The "Offline rendering only" requirement above remains the actual behavioral guarantee, enforced via a strict Content-Security-Policy in the rendered HTML (see markdown-rendering-pipeline spec) rather than by omitting this entitlement. The extension SHALL request no other sensitive entitlements (e.g. camera, microphone, contacts).
 
 #### Scenario: Extension runs with minimal entitlements
 - **WHEN** the extension is installed and invoked by Quick Look
-- **THEN** it SHALL execute inside the App Sandbox with read-only access limited to the file being previewed and its containing folder, and SHALL request no additional sensitive entitlements (e.g. camera, microphone, outbound network, contacts)
+- **THEN** it SHALL execute inside the App Sandbox with read-only access limited to the file being previewed and its containing folder, the `com.apple.security.network.client` entitlement, and no other sensitive entitlements (e.g. camera, microphone, contacts)
+
+#### Scenario: No network requests occur despite the network-client entitlement
+- **WHEN** the extension renders a preview for any Markdown file
+- **THEN** the rendered HTML's Content-Security-Policy SHALL block any outbound network request the page content could otherwise attempt, so no actual network traffic occurs even though the process holds the `com.apple.security.network.client` entitlement
 
 ### Requirement: Appearance follows system light/dark mode
 The preview SHALL visually match the current macOS system appearance setting.

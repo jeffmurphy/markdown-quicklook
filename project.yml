@@ -32,6 +32,7 @@ targets:
         SWIFT_VERSION: "5.0"
         CODE_SIGN_STYLE: Automatic
         ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_ENTITLEMENTS: Sources/MarkdownQuickLook/MarkdownQuickLook.entitlements
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: "Markdown Quick Look"
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
@@ -53,6 +54,7 @@ targets:
         SWIFT_VERSION: "5.0"
         CODE_SIGN_STYLE: Automatic
         ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_ENTITLEMENTS: Sources/MarkdownQuickLookExtension/MarkdownQuickLookExtension.entitlements
         INFOPLIST_FILE: Sources/MarkdownQuickLookExtension/Info.plist
         MACOSX_DEPLOYMENT_TARGET: "13.0"
         SKIP_INSTALL: YES

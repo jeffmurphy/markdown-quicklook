@@ -20,6 +20,36 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+
+	<!-- Recognize (but do not claim ownership/default-app status of) the
+	     widely-used de facto standard Markdown UTI, tagged only with the
+	     .md extension per proposal.md (no .markdown/.mdown/.mkd in this
+	     change). UTImportedTypeDeclarations (not Exported) means we do
+	     not become the default handler for .md files - only Quick Look
+	     is affected. See openspec/changes/add-markdown-quicklook-preview
+	     /specs/markdown-quicklook-extension/spec.md - Requirement: Quick
+	     Look invocation for Markdown files. -->
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>net.daringfireball.markdown</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Markdown Document</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>md</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
@@ -29,8 +59,9 @@
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>QLSupportedContentTypes</key>
-			<!-- Populated in task markdown-quicklook-yyp.1.3 -->
-			<array/>
+			<array>
+				<string>net.daringfireball.markdown</string>
+			</array>
 		</dict>
 	</dict>
 </dict>
