@@ -48,8 +48,18 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
 
     private static let renderCompleteMessageName = "renderComplete"
 
+    /// Comfortably under Quick Look's own external timeout for
+    /// unresponsive extensions (undocumented exact value, but generally
+    /// on the order of several to ~10s) - see design.md Decision 6. If
+    /// bootstrap.js's async rendering (Mermaid in particular) hasn't
+    /// signaled completion by this point, we complete the preview
+    /// ourselves with whatever has rendered so far, rather than risking
+    /// Quick Look force-killing the whole extension.
+    private static let renderTimeoutSeconds: TimeInterval = 5
+
     private var webView: WKWebView!
     private var completionHandler: ((Error?) -> Void)?
+    private var timeoutWorkItem: DispatchWorkItem?
 
     override func loadView() {
         let configuration = WKWebViewConfiguration()
@@ -85,6 +95,30 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
 
         let resourceBaseURL = Bundle(for: Self.self).resourceURL
         webView.loadHTMLString(html, baseURL: resourceBaseURL)
+
+        scheduleRenderTimeout()
+    }
+
+    /// Completes the preview exactly once, cancelling the timeout guard
+    /// regardless of which path (timeout, navigation failure, or
+    /// bootstrap.js's real completion signal) got there first.
+    private func complete(with error: Error?) {
+        timeoutWorkItem?.cancel()
+        timeoutWorkItem = nil
+        completionHandler?(error)
+        completionHandler = nil
+    }
+
+    private func scheduleRenderTimeout() {
+        let workItem = DispatchWorkItem { [weak self] in
+            // If completionHandler is already nil, real completion (or
+            // a navigation failure) already won the race - this is a
+            // no-op via complete()'s own nil-coalescing, but check here
+            // too to avoid doing pointless work.
+            self?.complete(with: nil)
+        }
+        timeoutWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.renderTimeoutSeconds, execute: workItem)
     }
 
     // Deliberately does NOT call the completion handler here - see the
@@ -96,8 +130,7 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        completionHandler?(error)
-        completionHandler = nil
+        complete(with: error)
     }
 
     // MARK: - WKScriptMessageHandler
@@ -106,7 +139,6 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
         guard message.name == Self.renderCompleteMessageName else {
             return
         }
-        completionHandler?(nil)
-        completionHandler = nil
+        complete(with: nil)
     }
 }
