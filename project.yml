@@ -45,6 +45,16 @@ targets:
     deploymentTarget: "13.0"
     sources:
       - path: Sources/MarkdownQuickLookExtension
+        excludes:
+          - "Resources/vendor/**"
+      # Folder reference (not a group) - preserves the on-disk directory
+      # structure inside Contents/Resources/vendor/ in the built .appex.
+      # This matters because katex.min.css references its fonts via
+      # relative `url(fonts/...)` paths, which would break if Xcode
+      # flattened everything into a single Resources/ directory.
+      - path: Sources/MarkdownQuickLookExtension/Resources/vendor
+        type: folder
+        buildPhase: resources
     settings:
       base:
         PRODUCT_NAME: "MarkdownQuickLookExtension"

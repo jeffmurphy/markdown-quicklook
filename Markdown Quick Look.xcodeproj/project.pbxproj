@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1E24651B92518AA3C1F6496B /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225BA407CB9A54940B0C42C2 /* StatusView.swift */; };
+		4C46C8839DE0D520FCA4035A /* vendor in Resources */ = {isa = PBXBuildFile; fileRef = 6184F978F92DAB432266A930 /* vendor */; };
 		93C415B01B3104E8ECE97B75 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B25B509363E54A646A1D077 /* PreviewViewController.swift */; };
 		A112D3017A9DF910CF90F86B /* MarkdownQuickLookExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E1F927BAB166A2659B0BD19C /* MarkdownQuickLookExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D7E908AC940B2B4DB825CDB2 /* MarkdownQuickLookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D477E57E6BA27B850FC0747D /* MarkdownQuickLookApp.swift */; };
@@ -42,6 +43,7 @@
 		225BA407CB9A54940B0C42C2 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		22DD51B4157C3F82E048C30D /* MarkdownQuickLookExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MarkdownQuickLookExtension.entitlements; sourceTree = "<group>"; };
 		52D6FE7E6BC3781A3A619FA0 /* Markdown Quick Look.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Markdown Quick Look.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6184F978F92DAB432266A930 /* vendor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = vendor; path = Sources/MarkdownQuickLookExtension/Resources/vendor; sourceTree = SOURCE_ROOT; };
 		8FAFF0F2E3DC8FD8F4C3D815 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9B25B509363E54A646A1D077 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		D477E57E6BA27B850FC0747D /* MarkdownQuickLookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownQuickLookApp.swift; sourceTree = "<group>"; };
@@ -68,12 +70,21 @@
 			path = MarkdownQuickLook;
 			sourceTree = "<group>";
 		};
+		999FA224456EBC53E98C6BE3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6184F978F92DAB432266A930 /* vendor */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		B02FD1ED8CB6755ACFEC729F /* MarkdownQuickLookExtension */ = {
 			isa = PBXGroup;
 			children = (
 				8FAFF0F2E3DC8FD8F4C3D815 /* Info.plist */,
 				22DD51B4157C3F82E048C30D /* MarkdownQuickLookExtension.entitlements */,
 				9B25B509363E54A646A1D077 /* PreviewViewController.swift */,
+				999FA224456EBC53E98C6BE3 /* Resources */,
 			);
 			path = MarkdownQuickLookExtension;
 			sourceTree = "<group>";
@@ -122,6 +133,7 @@
 			buildConfigurationList = 934C77319A8C8A7054A9E3DE /* Build configuration list for PBXNativeTarget "MarkdownQuickLookExtension" */;
 			buildPhases = (
 				980B04E75ABB96086649484C /* Sources */,
+				9A65B0E1709CB19A538B51DC /* Resources */,
 			);
 			buildRules = (
 			);
@@ -170,6 +182,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9A65B0E1709CB19A538B51DC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C46C8839DE0D520FCA4035A /* vendor in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9596A922B6162F8F02080223 /* Sources */ = {
