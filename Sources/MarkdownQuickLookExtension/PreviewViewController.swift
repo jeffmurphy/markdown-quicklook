@@ -22,10 +22,15 @@ import WebKit
 
 class PreviewViewController: NSViewController, QLPreviewingController, WKNavigationDelegate {
 
-    /// See design.md Decision 6: Markdown documents are overwhelmingly
-    /// small text files; 5MB is generous headroom while still bounding
-    /// worst-case read/parse/render time.
-    private static let maxPreviewBytes = 5 * 1024 * 1024
+    /// See design.md Decision 6. Originally set to 5MB on the (wrong)
+    /// assumption that this would be "generous headroom" - empirical
+    /// testing found marked.js's parse time scales roughly quadratically
+    /// with input size (100KB ~0.8s, 250KB ~4.8s, 500KB ~19s, 1MB+ never
+    /// completes within 30s), so 5MB was never actually renderable at
+    /// all. 100KB keeps worst-case parse time well under a second with
+    /// comfortable margin, and covers the overwhelming majority of real
+    /// Markdown files (READMEs, notes).
+    private static let maxPreviewBytes = 100 * 1024
 
     private var webView: WKWebView!
     private var completionHandler: ((Error?) -> Void)?

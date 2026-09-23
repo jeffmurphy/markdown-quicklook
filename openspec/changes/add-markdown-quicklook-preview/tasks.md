@@ -25,7 +25,7 @@
 
 ## 4. Quick Look Extension Controller
 
-- [ ] 4.1 Implement `QLPreviewingController.preparePreviewOfFile(at:completionHandler:)`: read file (capped at 5 MB, appending a truncation notice beyond the cap), strip front matter, assemble HTML, and verify with a fixture file larger than 5 MB that the preview shows a truncation notice
+- [x] 4.1 Implement `QLPreviewingController.preparePreviewOfFile(at:completionHandler:)`: read file (capped at 100 KB - corrected from an original 5 MB assumption after empirical testing found marked.js's parse time scales quadratically and cannot handle multi-megabyte input at all, see design.md Decision 6 - appending a truncation notice beyond the cap), strip front matter, assemble HTML, and verify with a fixture file larger than the cap that the preview shows a truncation notice
 - [ ] 4.2 Load the assembled HTML into the extension's `WKWebView` via `loadFileURL(_:allowingReadAccessTo:)` scoped to the previewed file's containing directory, and verify a fixture with a relative image (`./images/pic.png`) displays the image via `qlmanage -p`
 - [ ] 4.3 Verify graceful handling of a missing relative image (broken-image placeholder, no crash) using a fixture referencing a non-existent image path
 - [ ] 4.4 Implement an internal render/load timeout that calls the completion handler with a fallback/error state if exceeded, and verify via a deliberately slow/large fixture that the extension does not hang past the timeout
@@ -43,4 +43,4 @@
 ## 6. Documentation
 
 - [ ] 6.1 Write `README.md` covering: what the extension does, macOS version requirement, first-time setup (`fetch-vendor-assets.sh` → `build.sh` → `install.sh`), the one-time Gatekeeper right-click-Open note for the ad-hoc-signed host app, and `uninstall.sh`, and verify all documented commands succeed when run in order on a clean checkout
-- [ ] 6.2 Document known limitations (relative-image sandbox access is best-effort, 5 MB preview size cap, `.md`-only support) in `README.md`
+- [ ] 6.2 Document known limitations (relative-image sandbox access is best-effort, 100 KB preview size cap, `.md`-only support) in `README.md`

@@ -42,6 +42,6 @@ enum PreviewDocumentAssembler {
     /// content was truncated - see specs/markdown-quicklook-extension
     /// /spec.md - Scenario: Oversized file.
     static func appendTruncationNotice(to markdownSource: String) -> String {
-        return markdownSource + "\n\n---\n\n*(Content truncated - this file exceeds the 5 MB preview limit.)*"
+        return markdownSource + "\n\n---\n\n*(Content truncated - this file exceeds the preview size limit.)*"
     }
 }
