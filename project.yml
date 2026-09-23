@@ -69,12 +69,34 @@ targets:
         MACOSX_DEPLOYMENT_TARGET: "13.0"
         SKIP_INSTALL: YES
 
+  MarkdownQuickLookExtensionTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: Sources/MarkdownQuickLookExtension
+        excludes:
+          - "Resources/vendor/**"
+          - "Info.plist"
+      - path: Tests/MarkdownQuickLookExtensionTests
+    settings:
+      base:
+        PRODUCT_NAME: "MarkdownQuickLookExtensionTests"
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Automatic
+        MACOSX_DEPLOYMENT_TARGET: "13.0"
+
 schemes:
   Markdown Quick Look:
     build:
       targets:
         Markdown Quick Look: all
         MarkdownQuickLookExtension: all
+        MarkdownQuickLookExtensionTests: all
+    test:
+      targets:
+        - MarkdownQuickLookExtensionTests
     run:
       config: Debug
     archive:
