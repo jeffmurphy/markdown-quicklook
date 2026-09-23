@@ -43,6 +43,25 @@
       if (block.classList.contains("language-mermaid")) {
         continue;
       }
+      // Only highlight blocks with an explicit "language-xxx" class.
+      // hljs.highlightElement() auto-detects a language by default when
+      // no class is present, which can apply *incorrect* highlighting to
+      // plain fenced blocks with no declared language - the spec
+      // requires "no highlighting" for that case, not "best guess"
+      // highlighting. An explicit-but-unrecognized language class (e.g.
+      // "language-notarealthing") still reaches highlightElement, which
+      // correctly leaves it unstyled since no such language is
+      // registered.
+      var hasLanguageClass = false;
+      for (var c = 0; c < block.classList.length; c++) {
+        if (block.classList[c].indexOf("language-") === 0) {
+          hasLanguageClass = true;
+          break;
+        }
+      }
+      if (!hasLanguageClass) {
+        continue;
+      }
       try {
         hljs.highlightElement(block);
       } catch (e) {
