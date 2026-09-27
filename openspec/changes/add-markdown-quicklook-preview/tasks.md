@@ -37,7 +37,7 @@
 - [ ] 5.1 Write `scripts/build.sh` running `xcodebuild -scheme "Markdown Quick Look" -configuration Release build`, printing build output on failure and exiting non-zero, and verify by intentionally breaking the build once and confirming the script surfaces the `xcodebuild` error and exits non-zero
 - [ ] 5.2 Write `scripts/install.sh [install_dir]` that copies the built `.app` to `install_dir` (default `/Applications`), ad-hoc codesigns host app and extension (`codesign --force --deep -s -`), and refreshes Launch Services (`lsregister -f`) and the Quick Look cache (`qlmanage -r`, `qlmanage -r cache`); verify by running it after a successful build and confirming `.md` files show the rendered preview in Finder without a reboot
 - [ ] 5.3 Verify `scripts/install.sh` run before any build fails with a clear, non-zero-exit error message directing the user to run `scripts/build.sh` first
-- [ ] 5.4 Write `scripts/uninstall.sh [install_dir]` that removes the installed app and rebuilds the Launch Services database (`lsregister -kill -r -domain local -domain system -domain user`), and verify `.md` files revert to the default Quick Look text preview after running it
+- [x] 5.4 Write `scripts/uninstall.sh [install_dir]` that removes the installed app and rebuilds the Launch Services database (`lsregister -r -domain local -domain system -domain user` - `-kill` was removed by Apple on this macOS version, see design.md Decision 7), and verify `.md` files revert to the default Quick Look text preview after running it
 - [ ] 5.5 Verify App Sandbox: run `codesign -d --entitlements :- <installed extension binary>` and confirm `com.apple.security.app-sandbox` is `true` and no outbound-network entitlement is present
 
 ## 6. Documentation
