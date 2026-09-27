@@ -48,3 +48,6 @@ xcuserdata/
 
 # OpenCode session artifacts
 oc-session.json
+
+# DMG packaging output (scripts/make-dmg.sh)
+dist/
