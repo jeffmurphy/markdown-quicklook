@@ -65,6 +65,35 @@ warning. If so, either:
   dialog that appears, or
 - Go to **System Settings > Privacy & Security** and approve it there.
 
+## Moving to another Mac (no admin rights needed)
+
+If you want to install this on a machine where you don't have admin/sudo
+(e.g. a second, non-admin laptop), you have two options, neither of which
+needs elevated privileges:
+
+- **Copy the repo and install to a directory you own**:
+  `scripts/install.sh "$HOME/Applications"` instead of the default
+  `/Applications`. Requires Xcode + XcodeGen on that machine too.
+- **Build a drag-and-drop `.dmg` on this machine, transfer just that**:
+
+  ```bash
+  scripts/make-dmg.sh
+  ```
+
+  This produces `dist/Markdown Quick Look.dmg` - an ad-hoc-signed, ready-to-
+  install disk image. Copy that one file to the other Mac (AirDrop, USB,
+  etc.) - no need to clone the repo or install Xcode/XcodeGen there. Mount
+  it and drag the app into `~/Applications` (or `/Applications`, if you do
+  have admin rights there), then run, on that machine:
+
+  ```bash
+  /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -f "$HOME/Applications/Markdown Quick Look.app"
+  qlmanage -r
+  qlmanage -r cache
+  ```
+
+  (None of this needs `sudo`.)
+
 ## Usage
 
 Select any `.md` file in Finder and press the Space bar.
