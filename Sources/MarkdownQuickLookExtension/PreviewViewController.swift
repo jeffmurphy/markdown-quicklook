@@ -89,6 +89,9 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
             markdownBody = PreviewDocumentAssembler.appendTruncationNotice(to: markdownBody)
         }
 
+        let documentDirectory = url.deletingLastPathComponent()
+        markdownBody = RelativeResourceResolver.resolve(markdownSource: markdownBody, documentDirectory: documentDirectory)
+
         let bodyHTML = PreviewDocumentAssembler.assembleBodyHTML(markdownSource: markdownBody, metadata: parsed.metadata)
         let theme = SystemAppearanceDetector.currentTheme()
         let html = HTMLShellBuilder.build(bodyHTML: bodyHTML, rawMarkdownSource: markdownBody, theme: theme)
