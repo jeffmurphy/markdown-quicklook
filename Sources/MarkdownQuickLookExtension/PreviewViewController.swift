@@ -80,8 +80,29 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
         completionHandler = handler
+        let resourceBaseURL = Bundle(for: Self.self).resourceURL
+        let theme = SystemAppearanceDetector.currentTheme()
 
-        let loaded = FileContentLoader.load(url: url, maxBytes: Self.maxPreviewBytes)
+        let loaded: FileContentLoadResult
+        do {
+            loaded = try FileContentLoader.load(url: url, maxBytes: Self.maxPreviewBytes)
+        } catch {
+            // Unreadable file (permissions, I/O error) - show an explicit,
+            // human-readable error message rather than a raw error or a
+            // silently blank page (which is reserved for the genuinely-
+            // empty-but-readable case below). No client-side rendering
+            // is needed for this static message, so we complete
+            // immediately rather than waiting for a renderComplete
+            // signal that will never arrive.
+            let errorHTML = HTMLShellBuilder.buildErrorPage(
+                message: "This file couldn't be opened for preview.",
+                theme: theme
+            )
+            webView.loadHTMLString(errorHTML, baseURL: resourceBaseURL)
+            complete(with: nil)
+            return
+        }
+
         let parsed = FrontMatterParser.parse(loaded.text)
 
         var markdownBody = parsed.body
@@ -93,10 +114,8 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
         markdownBody = RelativeResourceResolver.resolve(markdownSource: markdownBody, documentDirectory: documentDirectory)
 
         let bodyHTML = PreviewDocumentAssembler.assembleBodyHTML(markdownSource: markdownBody, metadata: parsed.metadata)
-        let theme = SystemAppearanceDetector.currentTheme()
         let html = HTMLShellBuilder.build(bodyHTML: bodyHTML, rawMarkdownSource: markdownBody, theme: theme)
 
-        let resourceBaseURL = Bundle(for: Self.self).resourceURL
         webView.loadHTMLString(html, baseURL: resourceBaseURL)
 
         scheduleRenderTimeout()

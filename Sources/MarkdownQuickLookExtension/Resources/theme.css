@@ -211,6 +211,16 @@ table.frontmatter-metadata tr:last-child td {
   border-bottom: none;
 }
 
+/* Error state (unreadable file - see PreviewViewController) */
+.error-state {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-fg-muted);
+  font-size: 0.95em;
+  padding: 24px 0;
+}
+
 /* Mermaid diagrams (bootstrap.js) */
 .mermaid-diagram {
   margin-bottom: 16px;

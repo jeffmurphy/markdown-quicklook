@@ -114,6 +114,32 @@ final class HTMLShellBuilderTests: XCTestCase {
         XCTAssertTrue(html.contains(#"<html data-theme="dark">"#))
     }
 
+    // MARK: - Error page (task 4.5)
+
+    func test_buildErrorPage_includesMessageAndThemeCSS() {
+        let html = HTMLShellBuilder.buildErrorPage(message: "This file couldn't be opened for preview.", theme: .dark)
+
+        XCTAssertTrue(html.contains("This file couldn't be opened for preview."))
+        XCTAssertTrue(html.contains(#"<html data-theme="dark">"#))
+        XCTAssertTrue(html.contains(#"<link rel="stylesheet" href="theme.css">"#))
+        XCTAssertTrue(html.contains("Content-Security-Policy"))
+    }
+
+    func test_buildErrorPage_doesNotIncludeScriptTags() {
+        let html = HTMLShellBuilder.buildErrorPage(message: "error", theme: .light)
+
+        XCTAssertFalse(html.contains("marked"))
+        XCTAssertFalse(html.contains("bootstrap.js"))
+        XCTAssertFalse(html.contains("highlight"))
+    }
+
+    func test_buildErrorPage_escapesHTMLInMessage() {
+        let html = HTMLShellBuilder.buildErrorPage(message: "<script>alert(1)</script>", theme: .light)
+
+        XCTAssertFalse(html.contains("<script>alert"))
+        XCTAssertTrue(html.contains("&lt;script&gt;"))
+    }
+
     func test_themeCSSLinkTagIsPresent() {
         let html = HTMLShellBuilder.build(bodyHTML: "<p>body</p>", rawMarkdownSource: "text")
         XCTAssertTrue(html.contains(#"<link rel="stylesheet" href="theme.css">"#))

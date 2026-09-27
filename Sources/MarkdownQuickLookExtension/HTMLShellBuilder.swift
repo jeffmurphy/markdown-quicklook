@@ -99,6 +99,36 @@ enum HTMLShellBuilder {
         return build(bodyHTML: bodyHTML, options: options)
     }
 
+    /// A minimal, styled error page - used when the file can't be read
+    /// at all (permissions, I/O error), as opposed to a genuinely empty
+    /// file (which renders through the normal pipeline with an empty
+    /// #markdown-body - no special-casing needed for that case). No
+    /// marked.js/highlight.js/bootstrap.js are needed since there is no
+    /// Markdown to render, only a static message.
+    static func buildErrorPage(message: String, theme: Theme = .light) -> String {
+        return """
+        <!DOCTYPE html>
+        <html data-theme="\(theme.rawValue)">
+        <head>
+            <meta charset="utf-8">
+            \(contentSecurityPolicyTag)
+            <link rel="stylesheet" href="theme.css">
+        </head>
+        <body>
+        <div class="error-state">\(escapeHTML(message))</div>
+        </body>
+        </html>
+        """
+    }
+
+    private static func escapeHTML(_ text: String) -> String {
+        var result = text
+        result = result.replacingOccurrences(of: "&", with: "&amp;")
+        result = result.replacingOccurrences(of: "<", with: "&lt;")
+        result = result.replacingOccurrences(of: ">", with: "&gt;")
+        return result
+    }
+
     /// Blocks any outbound network request the page content could
     /// otherwise attempt (http:/https:/etc.), while still allowing
     /// same-origin and `file:` resources - everything this extension
