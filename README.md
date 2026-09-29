@@ -94,6 +94,38 @@ needs elevated privileges:
 
   (None of this needs `sudo`.)
 
+## Distributing to coworkers/others (no Gatekeeper warning)
+
+The ad-hoc `.dmg` from `scripts/make-dmg.sh` above still shows a Gatekeeper
+"unidentified developer" warning for anyone you give it to - fine for your
+own machines, not great for handing to coworkers. If you have a paid Apple
+Developer account with a **Developer ID Application** certificate already
+in your Keychain, use Developer ID signing + notarization instead:
+
+```bash
+# One-time setup (uses YOUR Apple ID - this script never sees your password):
+xcrun notarytool store-credentials "notarytool-profile" \
+  --apple-id "you@example.com" \
+  --team-id "YOURTEAMID" \
+  --password "an-app-specific-password"
+
+# Then, any time you want a distributable build:
+make notarize
+# (equivalent to: scripts/build.sh && scripts/notarize.sh)
+```
+
+This signs with your real Developer ID (Hardened Runtime enabled), submits
+to Apple's notary service, staples the ticket, and verifies Gatekeeper
+acceptance - producing `dist/Markdown Quick Look (Notarized).dmg`, which
+opens with **no warning at all** on any Mac.
+
+## Command-line shortcuts (Makefile)
+
+Once you have a checkout with Xcode/XcodeGen set up, `make help` lists
+convenience targets wrapping the scripts above - `make install` rebuilds and
+re-signs/installs in one step, `make dmg` / `make notarize` build the two
+distributable package types, `make test` runs the unit test suite, etc.
+
 ## Usage
 
 Select any `.md` file in Finder and press the Space bar.
