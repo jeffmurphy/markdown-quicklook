@@ -2,7 +2,7 @@
 #
 # Run `make help` to list targets.
 
-.PHONY: help build test resign install uninstall dmg notarize clean
+.PHONY: help build test resign install uninstall dmg notarize clean appicons
 
 INSTALL_DIR ?= /Applications
 NOTARY_PROFILE ?= notarytool-profile
@@ -17,6 +17,7 @@ help:
 	@echo "  make dmg                - rebuild + package an ad-hoc-signed dist/*.dmg (personal use)"
 	@echo "  make notarize           - rebuild + sign with Developer ID + notarize + staple (for distributing to others)"
 	@echo "  make clean              - remove dist/ and clean Xcode build artifacts"
+	@echo "  make appicons           - regenerate AppIcon.appiconset from design/markdownquicklookicon.png"
 	@echo ""
 	@echo "Variables (override with VAR=value):"
 	@echo "  INSTALL_DIR             - where 'resign'/'install'/'uninstall' target (default: /Applications)"
@@ -45,3 +46,6 @@ notarize: build
 clean:
 	rm -rf dist
 	xcodebuild -project "Markdown Quick Look.xcodeproj" -scheme "Markdown Quick Look" clean
+
+appicons:
+	./scripts/generate-appicons.sh

@@ -24,6 +24,7 @@
 		59E06B0FF56620AABF84CADD /* FrontMatterMetadataRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE6EAD10629CBF2A4A9DF13 /* FrontMatterMetadataRenderer.swift */; };
 		6F8B81F0368D30F5B5B69EAC /* PreviewDocumentAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D790FFA91B190D6612CA6B /* PreviewDocumentAssembler.swift */; };
 		79F9AAD7BA73C0B9ABC2BACB /* RenderingFeatureDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AD0AE5625B1F2577890C6E /* RenderingFeatureDetector.swift */; };
+		8673485B21C4007FB7FD8235 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B765A3F3005508BC77F66FB9 /* Assets.xcassets */; };
 		874B146C2ED6651C5C099CD5 /* theme.css in Resources */ = {isa = PBXBuildFile; fileRef = 341E6C3C5288F5775537A100 /* theme.css */; };
 		915C8152928CD0EB5A3D0B74 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B25B509363E54A646A1D077 /* PreviewViewController.swift */; };
 		93C415B01B3104E8ECE97B75 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B25B509363E54A646A1D077 /* PreviewViewController.swift */; };
@@ -87,6 +88,7 @@
 		9F668139FA8C993C7DB4FD51 /* PreviewDocumentAssemblerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewDocumentAssemblerTests.swift; sourceTree = "<group>"; };
 		A30F1D9D245263A7C996C7D5 /* RelativeResourceResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeResourceResolverTests.swift; sourceTree = "<group>"; };
 		A6D86AEA2B798925DF372E9D /* SystemAppearanceDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAppearanceDetector.swift; sourceTree = "<group>"; };
+		B765A3F3005508BC77F66FB9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB2A7433D748788DBAF75BFB /* FrontMatterMetadataRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontMatterMetadataRendererTests.swift; sourceTree = "<group>"; };
 		BBE6EAD10629CBF2A4A9DF13 /* FrontMatterMetadataRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontMatterMetadataRenderer.swift; sourceTree = "<group>"; };
 		D477E57E6BA27B850FC0747D /* MarkdownQuickLookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownQuickLookApp.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 		4D60CD272CCFA2ACF0BF1E1B /* MarkdownQuickLook */ = {
 			isa = PBXGroup;
 			children = (
+				B765A3F3005508BC77F66FB9 /* Assets.xcassets */,
 				1FBDAC151C78F47ADF3D15E3 /* MarkdownQuickLook.entitlements */,
 				D477E57E6BA27B850FC0747D /* MarkdownQuickLookApp.swift */,
 				225BA407CB9A54940B0C42C2 /* StatusView.swift */,
@@ -194,6 +197,7 @@
 			buildConfigurationList = E3D52E4F7557CD123F6F0F50 /* Build configuration list for PBXNativeTarget "Markdown Quick Look" */;
 			buildPhases = (
 				9596A922B6162F8F02080223 /* Sources */,
+				E4EF2375335B4884EEDCAAAD /* Resources */,
 				23676DC2CF2C004B4B0FEA63 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
@@ -302,6 +306,14 @@
 				F586F74D61D8504A6A1C74E3 /* bootstrap.js in Resources */,
 				874B146C2ED6651C5C099CD5 /* theme.css in Resources */,
 				4C46C8839DE0D520FCA4035A /* vendor in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E4EF2375335B4884EEDCAAAD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8673485B21C4007FB7FD8235 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
