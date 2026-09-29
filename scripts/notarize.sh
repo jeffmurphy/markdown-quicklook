@@ -112,6 +112,16 @@ hdiutil create \
     "$DMG_PATH" \
     > /dev/null
 
+echo "==> Signing the disk image itself"
+# Gatekeeper's assessment of a downloaded file checks the CONTAINER's
+# own signature, not just what's inside it - notarization tickets get
+# attached to (and checked against) this outer signature. Signing only
+# the .app inside and leaving the .dmg itself unsigned produces a
+# notarized-and-stapled DMG that Apple still accepts, but that
+# `spctl -t open` on the DMG itself reports as "rejected, source=no
+# usable signature" - found via real testing.
+codesign --force --sign "$IDENTITY" "$DMG_PATH"
+
 echo "==> Submitting to Apple's notary service (this can take a few minutes)"
 xcrun notarytool submit "$DMG_PATH" --keychain-profile "$NOTARY_PROFILE" --wait
 
